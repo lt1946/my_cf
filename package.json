@@ -7,6 +7,17 @@
       "jsdom":">=0.2.14",
       "mysql":">=0.9.6",
       "socket.io":">=0.9.6",
-      "connect":">=2.3.6"
+      "connect":">=2.3.6",
+      
+      "stylus":"*",
+      "jad":"*",
+      "qs":"*",
+      "nib":"*",
+      "socket.io-client":"*",
+      "redis":"0.5.11",
+      "mime":"1.2.4",
+      "uglify-js":"1.0.7",
+      "connect-redis":">=1.0.7"
+      
   }
 }
