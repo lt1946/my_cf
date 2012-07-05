@@ -1,10 +1,9 @@
 var app = require('express').createServer();
-var b=process.env.VCAP_SERVICES==null;
-app.get('/', function(req, res) {
-	var result = 'Hello from Cloud Foundry<br>' +
-       ( b?'':JSON.stringify(process.env.VCAP_SERVICES) +
-        '<br>========================<br>' +
-        JSON.stringify(JSON.parse(JSON.stringify(JSON.parse(process.env.VCAP_SERVICES)['mysql-5.1']))[0]['credentials']));
-	res.send(result);
-});
-app.listen(b?3000:process.env.VCAP_APP_PORT);
+var config = require('./config');
+var path = require('./action/path');
+
+config.init(app);
+path.init(app);
+app.listen(config.port);
+
+console.log('Server start http://'+config.host+':' + config.port);
