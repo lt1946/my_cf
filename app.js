@@ -1,8 +1,9 @@
 var app = require('express').createServer();
 app.get('/', function(req, res) {
     var result= 'Hello from Cloud Foundry<br>'
-        +JSON.stringify(process.env.VCAP_SERVICES).replace('\"','"')+'<br>'
-        +"========================<br>"
+        +JSON.stringify(process.env.VCAP_SERVICES).replace('{','{<br>')
+          .replace('[{','[{<br>').replace(',','<br>,').replace(':[',':[<br>').replace(']','<br>]')
+        '<br>========================<br>'
         +JSON.stringify(JSON.parse(process.env.VCAP_SERVICES)['mysql-5.1']['credentials']);
     res.send(result);
 });
