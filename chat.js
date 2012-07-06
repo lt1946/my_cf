@@ -13,8 +13,8 @@ var express = require('express'),
 /**
  * 私人聊天使用session
  */
-var usersWS = {}, //私人聊天用的websocket
-	storeMemory = new MemoryStore({
+var usersWS = {}; //私人聊天用的websocket
+var storeMemory = new MemoryStore({
 		reapInterval: 60000 * 10
 	});//session store
 //=========================app配置=============================	
@@ -128,15 +128,17 @@ for(var r in routes){
 	}(routes[r]));
 }
 */
-//===================socket链接监听=================
 /**
  * 开始socket链接监听
  * @param {Object} socket
  */
 io.sockets.on('connection', function (socket){
-	var session = socket.handshake.session;//session
+    var session = socket.handshake.session;//session
+    if(session.name==undefined){
+        redirect("/");return;
+    }
 	var name = session.name;
-	usersWS[name] = socket;
+    usersWS[name] = socket;
 	var refresh_online = function(){
 		var n = [];
 		for (var i in usersWS){
@@ -147,7 +149,7 @@ io.sockets.on('connection', function (socket){
 	refresh_online();
 	
 	socket.broadcast.emit('system message', '【'+name + '】回来了，大家赶紧去找TA聊聊~~');
-	
+
 	//公共信息
 	socket.on('public message',function(msg, fn){
 		socket.broadcast.emit('public message', name, msg);
@@ -159,14 +161,11 @@ io.sockets.on('connection', function (socket){
 		if (target) {
 			fn(true);
 			target.emit('private message', name+'[私信]', msg);
-		}
-		else {
+		}else {
 			fn(false)
 			socket.emit('message error', to, msg);
 		}
 	});
-	
-	
 	//掉线，断开链接处理
 	socket.on('disconnect', function(){
 		delete usersWS[name];
@@ -174,12 +173,9 @@ io.sockets.on('connection', function (socket){
 		socket.broadcast.emit('system message', '【'+name + '】无声无息地离开了。。。');
 		refresh_online();
 	});
-	
 });
-
 //===========app listen 开始鸟~==========
 app.listen(3000, function(){
 	var addr = app.address();
 	console.log('app listening on http://127.0.0.1：' + addr.port);
 });
-	
