@@ -7,4 +7,6 @@ app.get('/', function(req, res) {
         JSON.stringify(JSON.parse(JSON.stringify(JSON.parse(process.env.VCAP_SERVICES)['mysql-5.1']))[0]['credentials']));
 	res.send(result);
 });
-app.listen(b?3000:process.env.VCAP_APP_PORT);
+var port=b?3000:process.env.VCAP_APP_PORT
+app.listen(port);
+console.log("server running http://localhost:"+port);
