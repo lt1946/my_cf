@@ -1,4 +1,5 @@
 *.me
 me/*
 push_spider-dev.sh
-*.swp
+\*.swp
+
