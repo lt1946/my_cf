@@ -1,0 +1,62 @@
+<script id="event_template" type="text/template">
+<li>
+  <span class="label" title="{{= new Date(event.timestamp) }}">{{= moment(event.timestamp).format('LT') }}</span>
+  {{ var label = (event.message == 'paused' || event.message == 'restarted') ? 'info' : (event.message == 'up') ? 'success' : 'important' }}
+  <span class="label label-{{= label }}">{{= event.message }}</span>
+  <a href="{{=  route + '/checks/' + event.check._id }}">{{= event.check.name }}</a>
+  <a href="{{= event.check.url }}" target="_blank"><img src="{{= route }}/images/external-link-ltr-icon.png"></a>
+  {{ switch (event.message) { // cannot close ejs tag here or compilation fails, sorry
+       case 'paused': }}
+    {{ case 'restarted': }}
+      was {{= event.message }}
+    {{ break; }}
+    {{ case 'down': }}
+      went down ({{= event.details }})
+    {{ break; }}
+    {{ case 'up': }}
+      {{ if (event.downtime) { }}
+      went back up after {{= moment.duration(event.downtime).humanize() }} of downtime
+      {{ } else { }}
+      is now up
+      {{ } }}
+    {{ break; }}
+    {{ default: }}
+      unnown event
+  {{ } }}
+</li>
+</script>
+<script>
+$(document).ready(function() {
+  var init = function() { 
+    var event_template = document.getElementById('event_template').innerHTML;
+    var ejs = require('ejs');
+    ejs.open = '{{';
+    ejs.close = '}}';
+    var updateEvents = function() {
+      $.getJSON('<%= url %>', function(events) {
+        if ($.isEmptyObject(events)) {
+          $('#events').html('<p>Nothing happened lately. All Green!</p>');
+          return;
+        }
+        var lines = [];
+        $.each(events, function(key, eventGroup) {
+          lines.push('<ul><li class="day"><h3>' + moment(key).format('LL') + '</h3><ul>');
+          $.each(eventGroup, function(key, event) {
+            if (!event.message) return;
+            lines.push(ejs.render(event_template, { event: event, route: '<%= route %>' }));
+          });
+          lines.push('</ul></li></ul>');
+        });
+        $('#events').html(lines.join(''));
+      });
+    }
+    socket.on('CheckEvent', updateEvents);
+    updateEvents();
+  };
+  if ($('a[data-toggle="tab"]').length) {
+    $('a[data-toggle="tab"][href="#events"]').one('shown', init);
+  } else {
+    init();
+  }
+});
+</script>

@@ -1,0 +1,23 @@
+mongodb:
+  server:   localhost
+  database: uptime
+  user:     root 
+  password:
+
+monitor:
+  name:                   origin
+  apiUrl:                 'http://localhost:8082/api'
+  pollingInterval:        10000      # ten seconds
+  timeout:                5000       # five seconds
+
+analyzer:
+  updateInterval:         60000      # one minute
+  qosAggregationInterval: 600000     # ten minutes
+  pingHistory:            8035200000 # three months
+
+autoStartMonitor: true
+
+server:
+  port:     8082
+
+verbose: true # only used in dev

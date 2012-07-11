@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Uptime</title>
+    <link rel="stylesheet" href="<%= route %>/stylesheets/bootstrap.css">
+    <link rel="stylesheet" href="<%= route %>/stylesheets/style.css">
+    <%- renderCssTags(addedCss) %>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    var socket = io.connect('http://' + location.hostname);
+    </script>
+    <script src="<%= route %>/javascripts/moment.min.js"></script>
+  </head>
+  <body>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="<%= route %>/events">Uptime</a>
+          <ul class="nav pull-left">
+            <li><a href="<%= route %>/events">Events</a></li>
+            <li><a href="<%= route %>/checks">Checks</a></li>
+            <li><a href="<%= route %>/tags">Tags</a></li>
+          </ul>
+          <ul class="nav pull-right" id="check_summary">
+            <li id="all_up" style="display:none;"><span class="label label-success">Up</span><strong class="green">0</strong></li>
+            <li id="all_down" style="display: none;"><span class="label label-important">Down</span><strong class="red">0</strong></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <section>
+        <%- body %>
+      </section>
+      <footer class="footer">
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>Server powered by <a href="http://nodejs.org/">Node.JS</a> and <a href="http://www.mongodb.org/">MongoDB</a>.</p>
+        <p>Code licensed under the <a href="https://raw.github.com/fzaninotto/uptime/master/LICENSE">MIT License</a>. Check the <a href="https://github.com/fzaninotto/uptime">Uptime GitHub repository</a> regularly for updates.
+      </footer>
+    </div>
+    <script>
+    var nbNewEvents = 0;
+    $(document).ready(function() {
+      var updateCounts = function() {
+        $.getJSON('/api/checks/count', function(count) {
+          if (count.total > 0) {
+            $('#all_up').show().children('strong').text(count.up);
+          } else {
+            $('#all_up').hide();
+          }
+          if (count.down > 0) {
+            $('#all_down').show().children('strong').text(count.down);
+          } else {
+            $('#all_down').hide();
+          }
+          if (nbNewEvents > 0) {
+            document.title = '(' + nbNewEvents +') Uptime';
+          };
+        });
+      };
+      socket.on('CheckEvent', function() {
+        nbNewEvents++;
+        updateCounts();
+        $('#check_summary').fadeOut().fadeIn().fadeOut().fadeIn();
+      });
+      updateCounts();
+    });
+    </script>
+  </body>
+</html>

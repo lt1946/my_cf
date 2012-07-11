@@ -1,0 +1,13 @@
+<h1>Checks <small id="last_update"></small></h1>
+<% if (info.length) { %>
+<div class="alert alert-success"><%= info %></div>
+<% } %>
+<div style="text-align:right">
+  <a class="btn btn-primary" href="<%= route %>/checks/new">Create check</a>
+</div>
+<%- partial('_checks', { url: '/api/checks', route: route }) %>
+<script>
+jQuery(document).ready(function($) {
+  $('.navbar-inner li').eq(1).addClass('active');
+});
+</script>

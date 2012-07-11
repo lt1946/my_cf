@@ -1,0 +1,48 @@
+<script src="<%= route %>/javascripts/bootstrap-tab.js"></script>
+<script src="<%= route %>/javascripts/bootstrap-button.js"></script>
+<script src="<%= route %>/javascripts/ejs.min.js"></script>
+<script src="<%= route %>/javascripts/highcharts.js"></script>
+<script src="<%= route %>/javascripts/pagination.js"></script>
+<script>
+var ejs = require('ejs');
+ejs.open = '{{';
+ejs.close = '}}';
+var page = {};
+</script>
+<h1>
+  Tag "<%= tag.name %>"
+</h1>
+<ul class="nav nav-tabs">
+  <li><a href="#stats" data-toggle="tab">History</a></li>
+  <li><a href="#events" data-toggle="tab">Events</a></li>
+  <li><a href="#tagchecks" data-toggle="tab">Checks</a></li>
+  <li><a href="#tagreports" data-toggle="tab">Reports</a></li>
+</ul>
+<div class="tab-content">
+  <%- partial('_stats', { url: '/api/tags/' + tag.name + '/stats/' } ) %>
+  <div class="tab-pane" id="events">
+  <%- partial('_events', { url: '/api/tags/' + tag.name + '/events', route: route }) %>
+  </div>
+  <div class="tab-pane" id="tagchecks">
+  <%- partial('_checks', { url: '/api/checks?tag=' + tag.name, route: route }) %>
+  </div>
+  <div class="tab-pane" id="tagreports">
+  <%- partial('_tagReports', { url: '/api/tags/' + tag.name + '/months', tag: tag, route: route }) %>
+  </div>
+</div>
+<script>
+$(document).ready(function() {
+  $('.navbar-inner li').eq(2).addClass('active');
+  $('a[data-toggle="tab"]').on('click', function(e) {
+    history.pushState(null, null, $(this).attr('href') + 'tab');
+  });
+  window.addEventListener("popstate", function(e) {
+    var activeTab = $('[href=' + location.hash.substr(0, location.hash.length - 3) + ']');
+    if (activeTab.length) {
+      activeTab.tab('show');
+    } else {
+      $('.nav-tabs a:first').tab('show');
+    }
+  });
+});
+</script>
