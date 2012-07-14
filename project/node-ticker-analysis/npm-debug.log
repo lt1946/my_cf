@@ -1,0 +1,31 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'c:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'c:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install' ]
+2 info using npm@1.1.32
+3 info using node@v0.8.0
+4 verbose config file C:\Users\IATBFOREVER\.npmrc
+5 verbose config file c:\Program Files\nodejs\etc\npmrc
+6 verbose config file c:\Program Files\nodejs\node_modules\npm\npmrc
+7 verbose read json D:\git\webstorm\my_cf\project\node-ticker-analysis\package.json
+8 error install Couldn't read dependencies
+9 error Error: ENOENT, open 'D:\git\webstorm\my_cf\project\node-ticker-analysis\package.json'
+9 error  { [Error: ENOENT, open 'D:\git\webstorm\my_cf\project\node-ticker-analysis\package.json']
+9 error   errno: 34,
+9 error   code: 'ENOENT',
+9 error   path: 'D:\\git\\webstorm\\my_cf\\project\\node-ticker-analysis\\package.json' }
+10 error You may report this log at:
+10 error     <http://github.com/isaacs/npm/issues>
+10 error or email it to:
+10 error     <npm-@googlegroups.com>
+11 error System Windows_NT 6.1.7600
+12 error command "c:\\Program Files\\nodejs\\node.exe" "c:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install"
+13 error cwd D:\git\webstorm\my_cf\project\node-ticker-analysis
+14 error node -v v0.8.0
+15 error npm -v 1.1.32
+16 error path D:\git\webstorm\my_cf\project\node-ticker-analysis\package.json
+17 error code ENOENT
+18 error message ENOENT, open 'D:\git\webstorm\my_cf\project\node-ticker-analysis\package.json'
+19 error errno 34
+20 error 34 errno
+21 verbose exit [ 34, true ]
